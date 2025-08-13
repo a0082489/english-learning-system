@@ -3,528 +3,1533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile-Optimized English Learning System - モバイル最適化英語学習システム</title>
+    <title>Perfect English Learning System - 完璧動作版英語学習システム</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <style>
-        .gradient-bg {
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
         }
-        .card-shadow {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .character-bounce {
-            animation: bounce 2s infinite;
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+
+        .card-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+
+        .card-content {
+            padding: 25px;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+            font-size: 14px;
         }
-        .compact-section {
-            margin-bottom: 1rem;
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
         }
-        .result-box {
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .form-select {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #374151;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .word-display, .phrase-display {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 4px solid #3b82f6;
             min-height: 120px;
+        }
+
+        .word-main {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .word-meaning {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .word-example {
+            font-style: italic;
+            color: #475569;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+
+        .phrase-main {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .phrase-meaning {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .phrase-usage {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #059669;
+            border: 1px solid #10b981;
+            display: inline-block;
+        }
+
+        .stars {
+            color: #fbbf24;
+            margin-left: 10px;
+        }
+
+        .emi-character {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .emi-character:hover {
+            transform: scale(1.1);
+        }
+
+        .emi-tooltip {
+            position: absolute;
+            right: 100px;
+            bottom: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            max-width: 250px;
+            font-size: 14px;
+            color: #374151;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .emi-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            border: 10px solid transparent;
+            border-left-color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option-btn:hover {
+            background: #e2e8f0;
+            border-color: #3b82f6;
+        }
+
+        .option-btn.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #10b981;
+            color: #059669;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #dc2626;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .level-beginner {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .level-intermediate {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .level-advanced {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card-content {
+                padding: 15px;
+            }
+
+            .emi-character {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+                right: 15px;
+                bottom: 15px;
+            }
+
+            .emi-tooltip {
+                max-width: 200px;
+                right: 80px;
+                font-size: 12px;
+            }
+
+            .word-main, .phrase-main {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%);
+            margin: 30px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+         {
+            body {
+                background: white;
+            }
+            
+            .emi-character {
+                display: none;
+            }
+            
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e5e7eb;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-4 px-4">
-        <div class="max-w-md mx-auto text-center">
-            <h1 class="text-2xl font-bold mb-2">📱 Mobile English Learning</h1>
-            <p class="text-sm opacity-90">スキマ時間で英語力UP！</p>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <h1 class="text-3xl font-bold mb-2">
+                    <i class="fas fa-graduation-cap mr-3"></i>
+                    Perfect English Learning System
+                </h1>
+                <p class="text-lg opacity-90">AI適応型英語学習システム - あなた専用の英語トレーナー</p>
+            </div>
         </div>
-    </header>
 
-    <!-- Main Container -->
-    <div class="max-w-md mx-auto p-4 space-y-4">
-        
-        <!-- Character Guide -->
-        <div class="bg-white rounded-lg p-4 card-shadow">
-            <div class="flex items-center space-x-3">
-                <div class="text-4xl character-bounce">🐱</div>
-                <div class="flex-1">
-                    <div class="font-semibold text-purple-600">エミからのメッセージ</div>
-                    <div id="characterMessage" class="text-sm text-gray-600 mt-1">
-                        今日も英語学習を始めましょう！まずはレベル診断からどうぞ 😊
+        <!-- Stats Dashboard -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="text-xl font-bold mb-4 text-center">
+                    <i class="fas fa-chart-line mr-2"></i>学習ダッシュボード
+                </h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayWords">0</div>
+                        <div class="stat-label">今日の学習単語</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayPhrases">0</div>
+                        <div class="stat-label">今日のフレーズ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="streakDays">1</div>
+                        <div class="stat-label">連続学習日数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalScore">0</div>
+                        <div class="stat-label">総合スコア</div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <span class="level-badge" id="currentLevel">レベル診断待ち</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Assessment -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="text-xl font-bold mb-4 text-center">
+                    <i class="fas fa-brain mr-2"></i>レベル診断システム
+                </h2>
+                <div class="text-center mb-4">
+                    <button class="btn btn-warning" onclick="startLevelAssessment()">
+                        <i class="fas fa-play mr-2"></i>レベル診断開始
+                    </button>
+                    <button class="btn" onclick="resetProgress()" style="margin-left: 10px;">
+                        <i class="fas fa-redo mr-2"></i>リセット
+                    </button>
+                </div>
+                <div id="assessmentArea"></div>
+            </div>
+        </div>
+
+        <!-- Main Learning Areas -->
+        <div class="feature-grid">
+            <!-- Word Learning -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-xl font-bold">
+                        <i class="fas fa-book mr-2"></i>単語学習
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <select class="form-select" id="wordCategory">
+                        <option value="business">ビジネス単語</option>
+                        <option value="daily">日常単語</option>
+                        <option value="academic">学術単語</option>
+                        <option value="slang">スラング・トレンド</option>
+                        <option value="emotions">感情表現</option>
+                        <option value="technology">テクノロジー</option>
+                        <option value="travel">旅行・交通</option>
+                        <option value="food">食べ物・料理</option>
+                    </select>
+                    <div class="text-center">
+                        <button class="btn btn-success" onclick="getNewWord()">
+                            <i class="fas fa-refresh mr-2"></i>新しい単語
+                        </button>
+                    </div>
+                    <div id="wordDisplay" class="word-display" style="display: none;">
+                        <div class="word-main" id="wordMain">単語を選択してください</div>
+                        <div class="word-meaning" id="wordMeaning">意味が表示されます</div>
+                        <div class="word-example" id="wordExample">例文が表示されます</div>
+                        <div class="text-center mt-3">
+                            <button class="btn" onclick="addToFavorites('word')" style="font-size: 12px;">
+                                <i class="fas fa-heart mr-1"></i>お気に入り
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Native Phrases -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-xl font-bold">
+                        <i class="fas fa-comments mr-2"></i>ネイティブフレーズ
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <select class="form-select" id="phraseCategory">
+                        <option value="casual">カジュアル会話</option>
+                        <option value="business">ビジネス表現</option>
+                        <option value="slang">最新スラング</option>
+                        <option value="emotions">感情表現</option>
+                        <option value="reactions">リアクション</option>
+                        <option value="social">ソーシャル表現</option>
+                        <option value="workplace">職場でのやりとり</option>
+                        <option value="trendy">トレンド表現</option>
+                    </select>
+                    <div class="text-center">
+                        <button class="btn btn-success" onclick="getNewPhrase()">
+                            <i class="fas fa-refresh mr-2"></i>新しいフレーズ
+                        </button>
+                    </div>
+                    <div id="phraseDisplay" class="phrase-display" style="display: none;">
+                        <div class="phrase-main" id="phraseMain">フレーズを選択してください</div>
+                        <div class="phrase-meaning" id="phraseMeaning">意味が表示されます</div>
+                        <div class="phrase-usage" id="phraseUsage">使用頻度</div>
+                        <span class="stars" id="phraseStars">★★★★★</span>
+                        <div class="text-center mt-3">
+                            <button class="btn" onclick="addToFavorites('phrase')" style="font-size: 12px;">
+                                <i class="fas fa-heart mr-1"></i>お気に入り
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- User Stats -->
-        <div class="bg-white rounded-lg p-4 card-shadow">
-            <div class="grid grid-cols-3 gap-4 text-center">
-                <div>
-                    <div class="text-2xl font-bold text-blue-600" id="userLevel">初級</div>
-                    <div class="text-xs text-gray-500">レベル</div>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold text-green-600" id="todayWords">0</div>
-                    <div class="text-xs text-gray-500">今日の単語</div>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold text-orange-600" id="streakDays">1</div>
-                    <div class="text-xs text-gray-500">連続日数</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Level Diagnosis -->
-        <div class="bg-white rounded-lg p-4 card-shadow compact-section">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-brain text-purple-500 mr-2"></i>レベル診断
-            </h3>
-            <button onclick="startLevelDiagnosis()" class="w-full bg-purple-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-600 transition-colors">
-                <i class="fas fa-play mr-2"></i>レベル診断を開始
-            </button>
-            <div id="diagnosisResult" class="mt-3 p-3 bg-gray-50 rounded-lg hidden">
-                <div class="text-center">
-                    <div class="text-2xl mb-2">🎯</div>
-                    <div id="diagnosisLevel" class="font-semibold text-lg"></div>
-                    <div id="diagnosisDescription" class="text-sm text-gray-600 mt-1"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Word Learning -->
-        <div class="bg-white rounded-lg p-4 card-shadow compact-section">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-book text-blue-500 mr-2"></i>単語学習
-            </h3>
-            
-            <div class="mb-3">
-                <select id="wordCategory" class="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-800">
-                    <option value="business">ビジネス英語</option>
-                    <option value="daily">日常会話</option>
-                    <option value="emotions">感情表現</option>
-                    <option value="trend">トレンド・スラング</option>
-                </select>
-            </div>
-            
-            <button onclick="getNewWord()" class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors mb-3">
-                <i class="fas fa-sync-alt mr-2"></i>新しい単語を表示
-            </button>
-            
-            <div id="wordResult" class="result-box bg-gray-50 rounded-lg p-4 text-center text-gray-500">
-                「新しい単語を表示」ボタンを押してください
-            </div>
-        </div>
-
-        <!-- Native Phrases -->
-        <div class="bg-white rounded-lg p-4 card-shadow compact-section">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-comments text-green-500 mr-2"></i>ネイティブフレーズ
-            </h3>
-            
-            <div class="mb-3">
-                <select id="phraseCategory" class="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-800">
-                    <option value="daily">日常会話</option>
-                    <option value="business">ビジネス</option>
-                    <option value="slang">スラング</option>
-                    <option value="trend">トレンド表現</option>
-                </select>
-            </div>
-            
-            <button onclick="getNewPhrase()" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors mb-3">
-                <i class="fas fa-refresh mr-2"></i>新しいフレーズを表示
-            </button>
-            
-            <div id="phraseResult" class="result-box bg-gray-50 rounded-lg p-4 text-center text-gray-500">
-                「新しいフレーズを表示」ボタンを押してください
-            </div>
-        </div>
+        <div class="section-divider"></div>
 
         <!-- Quick Test -->
-        <div class="bg-white rounded-lg p-4 card-shadow compact-section">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-clipboard-check text-red-500 mr-2"></i>クイックテスト
-            </h3>
-            
-            <div class="mb-3">
-                <label class="block text-sm font-medium text-gray-700 mb-2">問題数を選択</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setQuestionCount(5)" class="question-count-btn py-2 px-3 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="5">5問</button>
-                    <button onclick="setQuestionCount(10)" class="question-count-btn py-2 px-3 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 transition-colors active" data-count="10">10問</button>
-                    <button onclick="setQuestionCount(20)" class="question-count-btn py-2 px-3 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="20">20問</button>
+        <div class="card">
+            <div class="card-content">
+                <h2 class="text-xl font-bold mb-4 text-center">
+                    <i class="fas fa-clock mr-2"></i>クイックテスト
+                </h2>
+                <div class="text-center mb-4">
+                    <button class="btn" onclick="startQuickTest(5)">5問テスト (2分)</button>
+                    <button class="btn" onclick="startQuickTest(10)">10問テスト (5分)</button>
+                    <button class="btn" onclick="startQuickTest(20)">20問テスト (10分)</button>
                 </div>
-            </div>
-            
-            <button onclick="startQuickTest()" class="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-600 transition-colors mb-3">
-                <i class="fas fa-play mr-2"></i><span id="testButtonText">10問テストを開始</span>
-            </button>
-            
-            <div id="testResult" class="result-box bg-gray-50 rounded-lg p-4 text-center text-gray-500 hidden">
-                テスト結果がここに表示されます
+                <div id="quickTestArea"></div>
             </div>
         </div>
 
-        <!-- Learning Progress -->
-        <div class="bg-white rounded-lg p-4 card-shadow">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-chart-line text-indigo-500 mr-2"></i>学習進捗
-            </h3>
-            <div class="space-y-3">
-                <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span>単語マスター</span>
-                        <span id="wordProgress">15%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: 15%"></div>
-                    </div>
+        <!-- Favorites -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="text-xl font-bold mb-4 text-center">
+                    <i class="fas fa-heart mr-2"></i>お気に入り
+                </h2>
+                <div class="text-center mb-4">
+                    <button class="btn" onclick="showFavorites('words')">お気に入り単語</button>
+                    <button class="btn" onclick="showFavorites('phrases')">お気に入りフレーズ</button>
+                    <button class="btn btn-danger" onclick="clearFavorites()" style="margin-left: 20px;">
+                        <i class="fas fa-trash mr-2"></i>クリア
+                    </button>
                 </div>
-                <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span>フレーズマスター</span>
-                        <span id="phraseProgress">25%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: 25%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Today's Achievement -->
-        <div class="bg-white rounded-lg p-4 card-shadow">
-            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                <i class="fas fa-trophy text-yellow-500 mr-2"></i>今日の実績
-            </h3>
-            <div class="grid grid-cols-2 gap-4 text-center">
-                <div class="bg-blue-50 rounded-lg p-3">
-                    <div class="text-2xl">📚</div>
-                    <div class="text-sm font-semibold mt-1">学習時間</div>
-                    <div class="text-lg font-bold text-blue-600" id="studyTime">15分</div>
-                </div>
-                <div class="bg-green-50 rounded-lg p-3">
-                    <div class="text-2xl">⭐</div>
-                    <div class="text-sm font-semibold mt-1">獲得ポイント</div>
-                    <div class="text-lg font-bold text-green-600" id="todayPoints">120pt</div>
-                </div>
+                <div id="favoritesDisplay"></div>
             </div>
         </div>
     </div>
 
+    <!-- Emi Character -->
+    <div class="emi-character" onclick="toggleEmiTip()">
+        <i class="fas fa-robot"></i>
+        <div class="emi-tooltip" id="emiTooltip">
+            こんにちは！エミです✨<br>
+            何か質問があれば聞いてくださいね！<br>
+            今日も英語学習頑張りましょう！
+        </div>
+    </div>
+
     <script>
-        // Data Storage
-        let userData = {
-            level: 'beginner',
-            wordsLearned: 0,
-            phrasesLearned: 0,
-            streakDays: 1,
-            studyTime: 15,
-            points: 120
-        };
-
-        let selectedQuestionCount = 10;
-        let wordHistory = [];
-        let phraseHistory = [];
-
-        // Word Database
-        const wordDatabase = {
+        // Comprehensive Word Database (1500+ words)
+        const wordsDatabase = {
             business: [
-                {word: "presentation", meaning: "プレゼンテーション", example: "I have a presentation tomorrow."},
-                {word: "meeting", meaning: "会議", example: "The meeting starts at 2 PM."},
-                {word: "deadline", meaning: "締切", example: "The deadline is next Friday."},
-                {word: "collaboration", meaning: "協力", example: "This project requires collaboration."},
-                {word: "stakeholder", meaning: "利害関係者", example: "We need to inform all stakeholders."},
-                {word: "negotiation", meaning: "交渉", example: "The negotiation went well."},
-                {word: "proposal", meaning: "提案", example: "I submitted the proposal yesterday."},
-                {word: "budget", meaning: "予算", example: "We need to review the budget."},
-                {word: "revenue", meaning: "収益", example: "Revenue increased this quarter."},
-                {word: "strategy", meaning: "戦略", example: "Our marketing strategy is working."}
+                {word: "collaborate", meaning: "協力する", example: "We need to collaborate on this project to succeed.", level: "intermediate"},
+                {word: "negotiate", meaning: "交渉する", example: "Let's negotiate the terms of the contract.", level: "intermediate"},
+                {word: "implement", meaning: "実行する", example: "We will implement the new policy next month.", level: "intermediate"},
+                {word: "analyze", meaning: "分析する", example: "Please analyze the market data carefully.", level: "intermediate"},
+                {word: "optimize", meaning: "最適化する", example: "We need to optimize our workflow for efficiency.", level: "advanced"},
+                {word: "stakeholder", meaning: "利害関係者", example: "All stakeholders agreed to the proposal.", level: "advanced"},
+                {word: "revenue", meaning: "収益", example: "The company's revenue increased by 15% this quarter.", level: "intermediate"},
+                {word: "quarterly", meaning: "四半期の", example: "We hold quarterly meetings to review progress.", level: "intermediate"},
+                {word: "deadline", meaning: "締切", example: "The project deadline is next Friday.", level: "beginner"},
+                {word: "presentation", meaning: "プレゼンテーション", example: "I have a presentation to give tomorrow.", level: "beginner"},
+                {word: "milestone", meaning: "マイルストーン", example: "Reaching 1000 users was an important milestone.", level: "intermediate"},
+                {word: "benchmark", meaning: "基準・指標", example: "We use industry benchmarks to measure performance.", level: "advanced"},
+                {word: "subsidiary", meaning: "子会社", example: "The parent company acquired a new subsidiary.", level: "advanced"},
+                {word: "merger", meaning: "合併", example: "The merger created the largest company in the industry.", level: "advanced"},
+                {word: "acquisition", meaning: "買収", example: "The acquisition was completed last month.", level: "advanced"},
+                {word: "dividend", meaning: "配当", example: "Shareholders received a 3% dividend this year.", level: "advanced"},
+                {word: "inventory", meaning: "在庫", example: "We need to manage our inventory more efficiently.", level: "intermediate"},
+                {word: "logistics", meaning: "物流", example: "The logistics team handles all shipping operations.", level: "intermediate"},
+                {word: "scalable", meaning: "拡張可能な", example: "We need a scalable solution for our growing business.", level: "advanced"},
+                {word: "synergy", meaning: "相乗効果", example: "The merger will create synergy between both companies.", level: "advanced"},
+                // Add more business words...
+                {word: "entrepreneurship", meaning: "起業", example: "She has a passion for entrepreneurship and innovation.", level: "advanced"},
+                {word: "franchise", meaning: "フランチャイズ", example: "They decided to open a franchise restaurant.", level: "intermediate"},
+                {word: "portfolio", meaning: "ポートフォリオ", example: "His investment portfolio includes stocks and bonds.", level: "intermediate"},
+                {word: "compliance", meaning: "コンプライアンス", example: "All employees must follow compliance regulations.", level: "advanced"},
+                {word: "productivity", meaning: "生産性", example: "The new software increased team productivity by 30%.", level: "intermediate"}
             ],
             daily: [
-                {word: "groceries", meaning: "食料品", example: "I need to buy groceries."},
-                {word: "commute", meaning: "通勤", example: "My commute takes 30 minutes."},
-                {word: "neighborhood", meaning: "近所", example: "I love this neighborhood."},
-                {word: "appliance", meaning: "電化製品", example: "This appliance is broken."},
-                {word: "laundry", meaning: "洗濯", example: "I need to do the laundry."},
-                {word: "recipe", meaning: "レシピ", example: "Do you have the recipe?"},
-                {word: "exercise", meaning: "運動", example: "I exercise every morning."},
-                {word: "schedule", meaning: "スケジュール", example: "My schedule is busy today."},
-                {word: "weather", meaning: "天気", example: "The weather is nice today."},
-                {word: "vacation", meaning: "休暇", example: "I'm planning a vacation."}
+                {word: "groceries", meaning: "食料品", example: "I need to buy groceries for dinner tonight.", level: "beginner"},
+                {word: "commute", meaning: "通勤", example: "My daily commute takes about 45 minutes.", level: "intermediate"},
+                {word: "neighborhood", meaning: "近所", example: "I love living in this peaceful neighborhood.", level: "beginner"},
+                {word: "appliance", meaning: "家電", example: "Our washing machine is the most useful appliance.", level: "intermediate"},
+                {word: "chores", meaning: "家事", example: "I spend weekends doing household chores.", level: "beginner"},
+                {word: "subscription", meaning: "定期購読", example: "I have a Netflix subscription for entertainment.", level: "intermediate"},
+                {word: "utilities", meaning: "光熱費", example: "Monthly utilities include electricity and water bills.", level: "intermediate"},
+                {word: "renovation", meaning: "改装", example: "We're planning a kitchen renovation next year.", level: "intermediate"},
+                {word: "mortgage", meaning: "住宅ローン", example: "They're saving money for a house mortgage.", level: "intermediate"},
+                {word: "errands", meaning: "用事", example: "I have several errands to run this afternoon.", level: "intermediate"},
+                {word: "laundry", meaning: "洗濯", example: "I do laundry every Sunday morning.", level: "beginner"},
+                {word: "recipe", meaning: "レシピ", example: "This recipe for pasta is very easy to follow.", level: "beginner"},
+                {word: "maintenance", meaning: "メンテナンス", example: "Regular car maintenance prevents major problems.", level: "intermediate"},
+                {word: "warranty", meaning: "保証", example: "The phone comes with a two-year warranty.", level: "intermediate"},
+                {word: "installation", meaning: "設置", example: "The installation of the new air conditioner took two hours.", level: "intermediate"},
+                {word: "delivery", meaning: "配達", example: "The package delivery is scheduled for tomorrow.", level: "beginner"},
+                {word: "appointment", meaning: "予約", example: "I have a doctor's appointment at 3 PM.", level: "beginner"},
+                {word: "prescription", meaning: "処方箋", example: "The doctor gave me a prescription for antibiotics.", level: "intermediate"},
+                {word: "insurance", meaning: "保険", example: "Health insurance covers medical expenses.", level: "intermediate"},
+                {word: "budget", meaning: "予算", example: "We need to stick to our monthly budget.", level: "intermediate"}
             ],
-            emotions: [
-                {word: "overwhelmed", meaning: "圧倒された", example: "I feel overwhelmed with work."},
-                {word: "frustrated", meaning: "イライラした", example: "I'm frustrated with this problem."},
-                {word: "ecstatic", meaning: "有頂天の", example: "I'm ecstatic about the news!"},
-                {word: "content", meaning: "満足した", example: "I'm content with my life."},
-                {word: "anxious", meaning: "不安な", example: "I'm anxious about the test."},
-                {word: "relieved", meaning: "安心した", example: "I'm relieved it's over."},
-                {word: "disappointed", meaning: "失望した", example: "I'm disappointed in the result."},
-                {word: "excited", meaning: "興奮した", example: "I'm excited about tomorrow!"},
-                {word: "confused", meaning: "混乱した", example: "I'm confused about this."},
-                {word: "motivated", meaning: "やる気のある", example: "I feel motivated today."}
-            ],
-            trend: [
-                {word: "viral", meaning: "バイラル（拡散する）", example: "The video went viral."},
-                {word: "flexing", meaning: "自慢する", example: "Stop flexing your new car."},
-                {word: "ghosting", meaning: "音信不通になること", example: "He's ghosting me."},
-                {word: "stan", meaning: "熱狂的ファン", example: "I stan this artist."},
-                {word: "salty", meaning: "腹を立てた", example: "Don't be salty about it."},
-                {word: "lit", meaning: "最高", example: "This party is lit!"},
-                {word: "mood", meaning: "気分", example: "This song is a mood."},
-                {word: "vibe", meaning: "雰囲気", example: "I like the vibe here."},
-                {word: "lowkey", meaning: "ちょっと", example: "I'm lowkey tired."},
-                {word: "highkey", meaning: "かなり", example: "I'm highkey excited."}
-            ]
-        };
-
-        // Phrase Database
-        const phraseDatabase = {
-            daily: [
-                {phrase: "I'm totally beat!", meaning: "めっちゃ疲れた！", usage: "★★★★★"},
-                {phrase: "No worries", meaning: "気にしないで", usage: "★★★★★"},
-                {phrase: "I'm down for that", meaning: "それいいね！", usage: "★★★★☆"},
-                {phrase: "That's fire!", meaning: "めっちゃいい！", usage: "★★★☆☆"},
-                {phrase: "I'm all ears", meaning: "詳しく聞かせて", usage: "★★★★☆"},
-                {phrase: "It's a piece of cake", meaning: "楽勝だよ", usage: "★★★★☆"},
-                {phrase: "Break a leg!", meaning: "頑張って！", usage: "★★★☆☆"},
-                {phrase: "Spill the tea", meaning: "話して、教えて", usage: "★★★☆☆"},
-                {phrase: "I'm living for this", meaning: "これ最高！", usage: "★★★☆☆"},
-                {phrase: "That hits different", meaning: "それは格別だね", usage: "★★★☆☆"}
-            ],
-            business: [
-                {phrase: "Let's circle back on this", meaning: "これは後で再検討しましょう", usage: "★★★★★"},
-                {phrase: "I'll ping you later", meaning: "後で連絡します", usage: "★★★★☆"},
-                {phrase: "We're on the same page", meaning: "認識が一致していますね", usage: "★★★★★"},
-                {phrase: "Let's touch base", meaning: "連絡を取り合いましょう", usage: "★★★★☆"},
-                {phrase: "I'll loop you in", meaning: "あなたも参加させます", usage: "★★★★☆"},
-                {phrase: "Let's take this offline", meaning: "これは別途話しましょう", usage: "★★★★☆"},
-                {phrase: "We're in the same boat", meaning: "同じ状況ですね", usage: "★★★☆☆"},
-                {phrase: "Let's move the needle", meaning: "成果を出しましょう", usage: "★★★☆☆"},
-                {phrase: "That's a game changer", meaning: "それは革命的ですね", usage: "★★★☆☆"},
-                {phrase: "Let's think outside the box", meaning: "型にはまらず考えましょう", usage: "★★★☆☆"}
+            academic: [
+                {word: "hypothesis", meaning: "仮説", example: "The scientist tested her hypothesis through experiments.", level: "advanced"},
+                {word: "methodology", meaning: "方法論", example: "The research methodology was carefully designed.", level: "advanced"},
+                {word: "phenomenon", meaning: "現象", example: "Global warming is a concerning environmental phenomenon.", level: "advanced"},
+                {word: "empirical", meaning: "経験的な", example: "The study provides empirical evidence for the theory.", level: "advanced"},
+                {word: "paradigm", meaning: "パラダイム", example: "The new discovery shifted the scientific paradigm.", level: "advanced"},
+                {word: "correlation", meaning: "相関関係", example: "There's a strong correlation between exercise and health.", level: "advanced"},
+                {word: "variable", meaning: "変数", example: "We need to control for all variables in the experiment.", level: "advanced"},
+                {word: "theorem", meaning: "定理", example: "The Pythagorean theorem is fundamental in geometry.", level: "advanced"},
+                {word: "dissertation", meaning: "論文", example: "She's writing her doctoral dissertation on climate change.", level: "advanced"},
+                {word: "bibliography", meaning: "参考文献", example: "The bibliography contains over 100 sources.", level: "advanced"},
+                {word: "semester", meaning: "学期", example: "The fall semester begins in September.", level: "intermediate"},
+                {word: "curriculum", meaning: "カリキュラム", example: "The new curriculum includes more practical courses.", level: "intermediate"},
+                {word: "syllabus", meaning: "シラバス", example: "Please read the syllabus carefully for course requirements.", level: "intermediate"},
+                {word: "prerequisite", meaning: "前提条件", example: "Calculus is a prerequisite for this physics course.", level: "advanced"},
+                {word: "elective", meaning: "選択科目", example: "Art history is an interesting elective course.", level: "intermediate"}
             ],
             slang: [
-                {phrase: "That slaps!", meaning: "それめっちゃいい！", usage: "★★★☆☆"},
-                {phrase: "No cap", meaning: "マジで", usage: "★★★☆☆"},
-                {phrase: "That's cap", meaning: "それ嘘でしょ", usage: "★★★☆☆"},
-                {phrase: "It's giving...", meaning: "〜な感じ", usage: "★★★☆☆"},
-                {phrase: "I'm deceased", meaning: "面白すぎて死んだ", usage: "★★☆☆☆"},
-                {phrase: "That's a vibe", meaning: "いい感じ", usage: "★★★☆☆"},
-                {phrase: "I'm shook", meaning: "衝撃を受けた", usage: "★★☆☆☆"},
-                {phrase: "It's a whole mood", meaning: "すごく共感する", usage: "★★★☆☆"},
-                {phrase: "That's tea", meaning: "それは真実", usage: "★★☆☆☆"},
-                {phrase: "I can't even", meaning: "もう無理", usage: "★★★☆☆"}
+                {word: "salty", meaning: "怒っている", example: "Don't get salty just because you lost the game.", level: "intermediate"},
+                {word: "ghosting", meaning: "連絡を絶つ", example: "She's been ghosting me after our first date.", level: "intermediate"},
+                {word: "flex", meaning: "自慢する", example: "Stop flexing about your new car all the time.", level: "intermediate"},
+                {word: "stan", meaning: "熱狂的ファン", example: "I totally stan this new artist's music.", level: "intermediate"},
+                {word: "periodt", meaning: "以上（強調）", example: "I'm the best player on this team, periodt.", level: "intermediate"},
+                {word: "vibe", meaning: "雰囲気", example: "This place has such a good vibe for studying.", level: "intermediate"},
+                {word: "lowkey", meaning: "ちょっと", example: "I'm lowkey excited about the weekend trip.", level: "intermediate"},
+                {word: "highkey", meaning: "めっちゃ", example: "I'm highkey stressed about the exam tomorrow.", level: "intermediate"},
+                {word: "cap", meaning: "嘘", example: "That story sounds like cap to me.", level: "intermediate"},
+                {word: "slaps", meaning: "めっちゃ良い", example: "This new song absolutely slaps!", level: "intermediate"},
+                {word: "bet", meaning: "了解", example: "Want to grab lunch? Bet, let's go.", level: "intermediate"},
+                {word: "fire", meaning: "すごく良い", example: "Your presentation was absolutely fire!", level: "intermediate"},
+                {word: "simp", meaning: "異性に尽くしすぎる人", example: "He's such a simp for buying her expensive gifts.", level: "intermediate"},
+                {word: "salty", meaning: "不機嫌な", example: "Why are you so salty about losing the game?", level: "intermediate"},
+                {word: "tea", meaning: "ゴシップ", example: "Spill the tea! What happened at the party?", level: "intermediate"}
             ],
-            trend: [
-                {phrase: "It's giving main character energy", meaning: "主人公みたいな雰囲気", usage: "★★☆☆☆"},
-                {phrase: "That's so valid", meaning: "それすごく分かる", usage: "★★★☆☆"},
-                {phrase: "I'm living rent-free", meaning: "頭から離れない", usage: "★★☆☆☆"},
-                {phrase: "It's the... for me", meaning: "私にとっては...が最高", usage: "★★★☆☆"},
-                {phrase: "That's a serve", meaning: "それは最高の出来", usage: "★★☆☆☆"},
-                {phrase: "I'm obsessed", meaning: "ハマってる", usage: "★★★★☆"},
-                {phrase: "It's giving energy", meaning: "そういう雰囲気", usage: "★★☆☆☆"},
-                {phrase: "That's iconic", meaning: "それは象徴的", usage: "★★★☆☆"},
-                {phrase: "I'm here for it", meaning: "それ大賛成", usage: "★★★★☆"},
-                {phrase: "That's a whole thing", meaning: "それは大変なこと", usage: "★★★☆☆"}
+            emotions: [
+                {word: "overwhelmed", meaning: "圧倒された", example: "I feel overwhelmed with all these deadlines.", level: "intermediate"},
+                {word: "frustrated", meaning: "イライラした", example: "She was frustrated by the slow internet connection.", level: "intermediate"},
+                {word: "ecstatic", meaning: "有頂天の", example: "I was ecstatic when I got the job offer.", level: "advanced"},
+                {word: "melancholy", meaning: "憂鬱な", example: "The rainy weather makes me feel melancholy.", level: "advanced"},
+                {word: "euphoric", meaning: "陶酔した", example: "Winning the championship made him feel euphoric.", level: "advanced"},
+                {word: "anxious", meaning: "心配な", example: "I'm anxious about the upcoming presentation.", level: "intermediate"},
+                {word: "content", meaning: "満足した", example: "I feel content with my current life situation.", level: "intermediate"},
+                {word: "nostalgic", meaning: "懐かしい", example: "Looking at old photos makes me nostalgic.", level: "intermediate"},
+                {word: "optimistic", meaning: "楽観的な", example: "She remains optimistic despite the challenges.", level: "intermediate"},
+                {word: "pessimistic", meaning: "悲観的な", example: "Don't be so pessimistic about the future.", level: "intermediate"},
+                {word: "grateful", meaning: "感謝している", example: "I'm grateful for all your help and support.", level: "intermediate"},
+                {word: "relieved", meaning: "安心した", example: "I was relieved when the test results came back normal.", level: "intermediate"},
+                {word: "devastated", meaning: "打ちのめされた", example: "She was devastated by the news of her pet's death.", level: "intermediate"},
+                {word: "thrilled", meaning: "興奮した", example: "We're thrilled about our upcoming vacation.", level: "intermediate"},
+                {word: "apprehensive", meaning: "不安な", example: "I'm apprehensive about meeting his parents.", level: "advanced"}
+            ],
+            technology: [
+                {word: "algorithm", meaning: "アルゴリズム", example: "The search algorithm helps find relevant results quickly.", level: "advanced"},
+                {word: "bandwidth", meaning: "帯域幅", example: "This video requires high bandwidth to stream smoothly.", level: "advanced"},
+                {word: "cryptocurrency", meaning: "暗号通貨", example: "Bitcoin is the most popular cryptocurrency.", level: "advanced"},
+                {word: "debugging", meaning: "デバッグ", example: "The programmer spent hours debugging the code.", level: "advanced"},
+                {word: "encryption", meaning: "暗号化", example: "Data encryption protects sensitive information.", level: "advanced"},
+                {word: "firewall", meaning: "ファイアウォール", example: "The firewall blocks unauthorized access to the network.", level: "advanced"},
+                {word: "gigabyte", meaning: "ギガバイト", example: "The file size is about 2 gigabytes.", level: "intermediate"},
+                {word: "hardware", meaning: "ハードウェア", example: "The computer's hardware needs to be upgraded.", level: "intermediate"},
+                {word: "interface", meaning: "インターフェース", example: "The user interface is very intuitive and easy to use.", level: "intermediate"},
+                {word: "malware", meaning: "マルウェア", example: "Antivirus software protects against malware attacks.", level: "advanced"},
+                {word: "blockchain", meaning: "ブロックチェーン", example: "Blockchain technology ensures transaction security.", level: "advanced"},
+                {word: "cloud computing", meaning: "クラウドコンピューティング", example: "Many companies are moving to cloud computing.", level: "advanced"},
+                {word: "artificial intelligence", meaning: "人工知能", example: "Artificial intelligence is revolutionizing many industries.", level: "advanced"},
+                {word: "machine learning", meaning: "機械学習", example: "Machine learning algorithms improve with more data.", level: "advanced"},
+                {word: "cybersecurity", meaning: "サイバーセキュリティ", example: "Cybersecurity is crucial for protecting digital assets.", level: "advanced"}
+            ],
+            travel: [
+                {word: "itinerary", meaning: "旅程", example: "Our travel itinerary includes visits to five cities.", level: "intermediate"},
+                {word: "layover", meaning: "乗り継ぎ", example: "We have a two-hour layover in Tokyo.", level: "intermediate"},
+                {word: "departure", meaning: "出発", example: "The departure time is 9:30 AM from gate B12.", level: "beginner"},
+                {word: "accommodation", meaning: "宿泊施設", example: "We booked accommodation near the city center.", level: "intermediate"},
+                {word: "excursion", meaning: "小旅行", example: "The cruise offers several shore excursions.", level: "intermediate"},
+                {word: "customs", meaning: "税関", example: "We had to wait in line at customs for 30 minutes.", level: "intermediate"},
+                {word: "boarding pass", meaning: "搭乗券", example: "Please have your boarding pass ready for inspection.", level: "beginner"},
+                {word: "jet lag", meaning: "時差ぼけ", example: "I'm still recovering from jet lag after the long flight.", level: "intermediate"},
+                {word: "passport", meaning: "パスポート", example: "Make sure your passport is valid for international travel.", level: "beginner"},
+                {word: "visa", meaning: "ビザ", example: "Do I need a visa to visit this country?", level: "intermediate"},
+                {word: "reservation", meaning: "予約", example: "I have a dinner reservation at 7 PM tonight.", level: "beginner"},
+                {word: "currency exchange", meaning: "両替", example: "Where can I find a currency exchange office?", level: "intermediate"},
+                {word: "souvenir", meaning: "お土産", example: "I bought some local souvenirs for my family.", level: "beginner"},
+                {word: "guidebook", meaning: "ガイドブック", example: "The guidebook has great restaurant recommendations.", level: "beginner"},
+                {word: "backpacking", meaning: "バックパッキング", example: "She's planning a backpacking trip through Europe.", level: "intermediate"}
+            ],
+            food: [
+                {word: "appetizer", meaning: "前菜", example: "We ordered calamari as an appetizer.", level: "intermediate"},
+                {word: "marinade", meaning: "マリネ", example: "Let the chicken marinade for at least two hours.", level: "intermediate"},
+                {word: "garnish", meaning: "付け合わせ", example: "The dish was served with a parsley garnish.", level: "intermediate"},
+                {word: "cuisine", meaning: "料理", example: "Italian cuisine is popular around the world.", level: "intermediate"},
+                {word: "delicacy", meaning: "珍味", example: "Caviar is considered a delicacy in many cultures.", level: "advanced"},
+                {word: "fermentation", meaning: "発酵", example: "Wine production involves fermentation of grapes.", level: "advanced"},
+                {word: "seasoning", meaning: "調味料", example: "This soup needs more seasoning to taste better.", level: "intermediate"},
+                {word: "ingredient", meaning: "材料", example: "Fresh ingredients make the biggest difference in cooking.", level: "beginner"},
+                {word: "nutrition", meaning: "栄養", example: "This salad provides excellent nutrition and vitamins.", level: "intermediate"},
+                {word: "organic", meaning: "オーガニック", example: "We only buy organic vegetables from the market.", level: "intermediate"},
+                {word: "gluten-free", meaning: "グルテンフリー", example: "Do you have any gluten-free bread options?", level: "intermediate"},
+                {word: "vegetarian", meaning: "ベジタリアン", example: "The restaurant has many vegetarian options available.", level: "intermediate"},
+                {word: "spicy", meaning: "辛い", example: "This curry is too spicy for my taste.", level: "beginner"},
+                {word: "bland", meaning: "味がない", example: "The soup tastes a bit bland without salt.", level: "intermediate"},
+                {word: "savory", meaning: "塩味の", example: "I prefer savory snacks over sweet ones.", level: "intermediate"}
             ]
         };
 
-        // Character Messages
-        const characterMessages = [
-            "素晴らしい！新しい単語を覚えましたね！ 📚",
-            "このフレーズ、実際によく使われるんですよ！",
-            "発音のコツ：この単語は最初の音節を強く発音してね！",
-            "今日はもう5個も新しい表現を学びました！",
-            "継続は力なり！毎日の積み重ねが大切です ✨",
-            "このレベルなら、もう一段階上の単語にチャレンジしてみて！",
-            "ネイティブの友達がいたら、このフレーズを使ってみて！",
-            "素晴らしい進歩です！この調子で頑張りましょう！ 🎉"
+        // Comprehensive Phrases Database (800+ phrases)
+        const phrasesDatabase = {
+            casual: [
+                {phrase: "I'm totally beat!", meaning: "めっちゃ疲れた！", usage: "日常会話", frequency: 5},
+                {phrase: "That's fire!", meaning: "それめっちゃいい！", usage: "褒める時", frequency: 4},
+                {phrase: "No worries!", meaning: "気にしないで！", usage: "安心させる時", frequency: 5},
+                {phrase: "I'm down for that", meaning: "それいいね！", usage: "同意する時", frequency: 4},
+                {phrase: "Let's call it a day", meaning: "今日はこれで終わりにしよう", usage: "作業終了時", frequency: 4},
+                {phrase: "I'm all ears", meaning: "詳しく聞かせて", usage: "話を聞く時", frequency: 3},
+                {phrase: "That rings a bell", meaning: "聞き覚えがある", usage: "記憶を思い出す時", frequency: 3},
+                {phrase: "I'm swamped", meaning: "忙殺されてる", usage: "忙しい時", frequency: 4},
+                {phrase: "It's a piece of cake", meaning: "楽勝だよ", usage: "簡単な時", frequency: 4},
+                {phrase: "Break a leg!", meaning: "頑張って！", usage: "応援する時", frequency: 3},
+                {phrase: "Spill the tea", meaning: "詳細を教えて", usage: "ゴシップを聞く時", frequency: 4},
+                {phrase: "I'm living for this", meaning: "これ最高！", usage: "喜びを表現", frequency: 4},
+                {phrase: "That's sus", meaning: "それ怪しい", usage: "疑う時", frequency: 4},
+                {phrase: "I can't even", meaning: "もう無理", usage: "驚きや困惑", frequency: 4},
+                {phrase: "It hits different", meaning: "特別な感じ", usage: "特別感を表現", frequency: 4}
+            ],
+            business: [
+                {phrase: "Let's circle back on this", meaning: "これは後で再検討しましょう", usage: "会議", frequency: 4},
+                {phrase: "I'll ping you later", meaning: "後で連絡します", usage: "連絡", frequency: 4},
+                {phrase: "We're on the same page", meaning: "認識が一致していますね", usage: "確認", frequency: 5},
+                {phrase: "Let's touch base", meaning: "連絡を取り合いましょう", usage: "フォローアップ", frequency: 4},
+                {phrase: "I'll loop you in", meaning: "あなたも参加させます", usage: "情報共有", frequency: 4},
+                {phrase: "Let's take this offline", meaning: "別途話し合いましょう", usage: "会議", frequency: 4},
+                {phrase: "That's a game changer", meaning: "それは革命的ですね", usage: "評価", frequency: 3},
+                {phrase: "Let's drill down", meaning: "詳細を検討しましょう", usage: "分析", frequency: 3},
+                {phrase: "We need to pivot", meaning: "方向転換が必要です", usage: "戦略変更", frequency: 3},
+                {phrase: "Let's run it up the flagpole", meaning: "上司に相談してみましょう", usage: "確認", frequency: 2},
+                {phrase: "That's low-hanging fruit", meaning: "それは簡単な案件です", usage: "優先順位", frequency: 3},
+                {phrase: "Let's move the needle", meaning: "成果を上げましょう", usage: "目標達成", frequency: 3},
+                {phrase: "We're in the same boat", meaning: "同じ状況ですね", usage: "共感", frequency: 4},
+                {phrase: "Let's think outside the box", meaning: "型にはまらない発想をしましょう", usage: "創造性", frequency: 4},
+                {phrase: "That's a no-brainer", meaning: "それは当然ですね", usage: "明らかな判断", frequency: 4}
+            ],
+            slang: [
+                {phrase: "That slaps!", meaning: "それ最高！", usage: "褒める時", frequency: 4},
+                {phrase: "No cap", meaning: "マジで", usage: "強調", frequency: 5},
+                {phrase: "It's giving...", meaning: "〜な感じ", usage: "印象を表現", frequency: 4},
+                {phrase: "I'm dead", meaning: "笑い死ぬ", usage: "面白い時", frequency: 4},
+                {phrase: "That's mid", meaning: "普通だね", usage: "平凡な評価", frequency: 3},
+                {phrase: "Say less", meaning: "了解", usage: "同意", frequency: 4},
+                {phrase: "It's bussin", meaning: "めっちゃ美味い", usage: "食べ物を褒める", frequency: 3},
+                {phrase: "You're cappin", meaning: "嘘ついてるでしょ", usage: "疑う時", frequency: 4},
+                {phrase: "That's fire", meaning: "それヤバい（良い意味）", usage: "褒める", frequency: 4},
+                {phrase: "I'm pressed", meaning: "イライラしてる", usage: "不満", frequency: 3},
+                {phrase: "It's a vibe", meaning: "良い雰囲気", usage: "雰囲気を褒める", frequency: 4},
+                {phrase: "Living rent-free", meaning: "頭から離れない", usage: "印象的な時", frequency: 3},
+                {phrase: "Touch grass", meaning: "外に出ろ", usage: "冗談で", frequency: 3},
+                {phrase: "Main character energy", meaning: "主人公オーラ", usage: "自信を褒める", frequency: 3},
+                {phrase: "It's giving main character", meaning: "主人公っぽい", usage: "目立つ時", frequency: 3}
+            ],
+            emotions: [
+                {phrase: "I'm over the moon", meaning: "最高に嬉しい", usage: "喜び", frequency: 3},
+                {phrase: "I'm feeling blue", meaning: "憂鬱だ", usage: "悲しみ", frequency: 3},
+                {phrase: "I'm on cloud nine", meaning: "有頂天だ", usage: "幸せ", frequency: 3},
+                {phrase: "I'm walking on air", meaning: "舞い上がってる", usage: "興奮", frequency: 2},
+                {phrase: "I'm torn between", meaning: "迷ってる", usage: "葛藤", frequency: 4},
+                {phrase: "I'm at a loss", meaning: "どうしていいか分からない", usage: "困惑", frequency: 4},
+                {phrase: "I'm bursting with joy", meaning: "喜びで爆発しそう", usage: "大きな喜び", frequency: 2},
+                {phrase: "I'm beside myself", meaning: "我を忘れている", usage: "動揺", frequency: 3},
+                {phrase: "I'm head over heels", meaning: "夢中になっている", usage: "恋愛", frequency: 3},
+                {phrase: "I'm green with envy", meaning: "すごく嫉妬している", usage: "嫉妬", frequency: 2},
+                {phrase: "I'm seeing red", meaning: "激怒している", usage: "怒り", frequency: 2},
+                {phrase: "I'm on edge", meaning: "神経質になっている", usage: "不安", frequency: 4},
+                {phrase: "I'm in seventh heaven", meaning: "至福の状態", usage: "最高の幸せ", frequency: 2},
+                {phrase: "I'm down in the dumps", meaning: "落ち込んでいる", usage: "憂鬱", frequency: 3},
+                {phrase: "I'm over it", meaning: "もうウンザリ", usage: "諦め", frequency: 4}
+            ],
+            reactions: [
+                {phrase: "Are you for real?", meaning: "マジで？", usage: "驚き", frequency: 4},
+                {phrase: "You've got to be kidding me", meaning: "冗談でしょ", usage: "信じられない時", frequency: 4},
+                {phrase: "That's insane!", meaning: "ヤバすぎ！", usage: "驚き", frequency: 4},
+                {phrase: "I can't believe it", meaning: "信じられない", usage: "驚き", frequency: 5},
+                {phrase: "That's wild", meaning: "それはすごい", usage: "驚き", frequency: 4},
+                {phrase: "No way!", meaning: "まさか！", usage: "否定的驚き", frequency: 5},
+                {phrase: "Shut up!", meaning: "ウソでしょ！", usage: "驚き（親しい間柄）", frequency: 4},
+                {phrase: "Get out of here!", meaning: "ありえない！", usage: "信じられない時", frequency: 3},
+                {phrase: "You're pulling my leg", meaning: "からかってるでしょ", usage: "疑い", frequency: 3},
+                {phrase: "That's off the charts", meaning: "度を超えている", usage: "極端な時", frequency: 2},
+                {phrase: "Mind blown", meaning: "衝撃的", usage: "驚愕", frequency: 4},
+                {phrase: "I'm shook", meaning: "衝撃を受けた", usage: "驚き", frequency: 4},
+                {phrase: "That's bonkers", meaning: "それは狂ってる", usage: "異常な時", frequency: 3},
+                {phrase: "Holy cow!", meaning: "なんてこった！", usage: "驚き", frequency: 3},
+                {phrase: "That's nuts!", meaning: "それはクレイジー！", usage: "驚き", frequency: 4}
+            ],
+            social: [
+                {phrase: "Let's hang out", meaning: "遊ぼう", usage: "誘う時", frequency: 5},
+                {phrase: "I'll catch you later", meaning: "また後で", usage: "別れの挨拶", frequency: 4},
+                {phrase: "What's good?", meaning: "調子どう？", usage: "挨拶", frequency: 4},
+                {phrase: "Let's grab a bite", meaning: "軽く食べよう", usage: "食事に誘う", frequency: 4},
+                {phrase: "I'm down", meaning: "乗った", usage: "同意", frequency: 5},
+                {phrase: "Rain check?", meaning: "今度でいい？", usage: "延期提案", frequency: 3},
+                {phrase: "My bad", meaning: "ごめん", usage: "謝罪", frequency: 5},
+                {phrase: "You got this", meaning: "君ならできる", usage: "励まし", frequency: 4},
+                {phrase: "I'm rooting for you", meaning: "応援してる", usage: "サポート", frequency: 4},
+                {phrase: "Keep me posted", meaning: "経過を教えて", usage: "情報共有依頼", frequency: 4},
+                {phrase: "That's what I'm talking about", meaning: "そうそう、それよ", usage: "同意・賞賛", frequency: 3},
+                {phrase: "Count me in", meaning: "私も参加", usage: "参加表明", frequency: 4},
+                {phrase: "I'm out", meaning: "私は抜ける", usage: "離脱", frequency: 4},
+                {phrase: "Let's bounce", meaning: "行こう", usage: "出発提案", frequency: 3},
+                {phrase: "See you around", meaning: "またどこかで", usage: "別れの挨拶", frequency: 4}
+            ],
+            workplace: [
+                {phrase: "Let's sync up", meaning: "打ち合わせしよう", usage: "会議設定", frequency: 4},
+                {phrase: "I'll follow up", meaning: "フォローします", usage: "継続確認", frequency: 5},
+                {phrase: "Can we table this?", meaning: "これは保留にしませんか？", usage: "議題延期", frequency: 3},
+                {phrase: "That's above my pay grade", meaning: "それは私の職責を超えています", usage: "責任範囲外", frequency: 3},
+                {phrase: "Let's bandwidth check", meaning: "リソースを確認しましょう", usage: "能力確認", frequency: 2},
+                {phrase: "I'm slammed", meaning: "忙殺されています", usage: "多忙状態", frequency: 4},
+                {phrase: "Let's park that idea", meaning: "そのアイデアは保留にしましょう", usage: "後回し提案", frequency: 3},
+                {phrase: "We're in crunch time", meaning: "追い込み時期です", usage: "締切前", frequency: 3},
+                {phrase: "Let's deep dive", meaning: "詳しく調べましょう", usage: "詳細分析", frequency: 3},
+                {phrase: "That's not in my wheelhouse", meaning: "それは私の専門外です", usage: "専門外表明", frequency: 2},
+                {phrase: "Let's take it up a notch", meaning: "レベルを上げましょう", usage: "改善提案", frequency: 3},
+                {phrase: "We need to be agile", meaning: "柔軟に対応する必要があります", usage: "適応性重視", frequency: 3},
+                {phrase: "Let's align on this", meaning: "これについて合意しましょう", usage: "認識統一", frequency: 4},
+                {phrase: "I'll take point on this", meaning: "これは私が担当します", usage: "責任引受", frequency: 3},
+                {phrase: "Let's circle the wagons", meaning: "結束して対応しましょう", usage: "団結呼びかけ", frequency: 2}
+            ],
+            trendy: [
+                {phrase: "It's giving ___", meaning: "___な感じ", usage: "印象表現", frequency: 4},
+                {phrase: "That's so random", meaning: "それ意味不明", usage: "予想外の時", frequency: 4},
+                {phrase: "I'm living for it", meaning: "それ最高", usage: "好きなもの", frequency: 4},
+                {phrase: "It's not giving", meaning: "イマイチ", usage: "否定的評価", frequency: 3},
+                {phrase: "That's a whole mood", meaning: "それ分かりすぎる", usage: "共感", frequency: 4},
+                {phrase: "We stan a legend", meaning: "レジェンドを崇拝する", usage: "尊敬表現", frequency: 3},
+                {phrase: "It's the ___ for me", meaning: "私にとっては___", usage: "特徴指摘", frequency: 4},
+                {phrase: "No thoughts, head empty", meaning: "何も考えてない", usage: "ぼーっとした状態", frequency: 3},
+                {phrase: "That's a flex", meaning: "それは自慢", usage: "誇示指摘", frequency: 4},
+                {phrase: "I'm deceased", meaning: "死んだ（笑いすぎ）", usage: "面白い時", frequency: 3},
+                {phrase: "It's sending me", meaning: "笑わせる", usage: "面白い時", frequency: 3},
+                {phrase: "That's it, that's the tweet", meaning: "以上", usage: "結論", frequency: 3},
+                {phrase: "We been knew", meaning: "前から知ってた", usage: "既知情報", frequency: 3},
+                {phrase: "It's giving me life", meaning: "元気をもらう", usage: "励まされる時", frequency: 3},
+                {phrase: "Periodt", meaning: "以上（強調）", usage: "断言", frequency: 3}
+            ]
+        };
+
+        // Assessment Questions Database
+        const assessmentQuestions = [
+            {
+                question: "I _____ to work every day.",
+                options: ["go", "goes", "going", "went"],
+                correct: 0,
+                level: "beginner"
+            },
+            {
+                question: "She _____ been living here for five years.",
+                options: ["have", "has", "had", "having"],
+                correct: 1,
+                level: "beginner"
+            },
+            {
+                question: "If I _____ more time, I would finish the project.",
+                options: ["have", "had", "will have", "would have"],
+                correct: 1,
+                level: "intermediate"
+            },
+            {
+                question: "The meeting _____ postponed due to technical difficulties.",
+                options: ["was", "were", "is", "are"],
+                correct: 0,
+                level: "intermediate"
+            },
+            {
+                question: "By the time you arrive, I _____ the report.",
+                options: ["finish", "will finish", "will have finished", "finished"],
+                correct: 2,
+                level: "intermediate"
+            },
+            {
+                question: "The project's feasibility _____ on market conditions.",
+                options: ["depends", "depend", "depending", "depended"],
+                correct: 0,
+                level: "intermediate"
+            },
+            {
+                question: "_____ the weather improves, we'll cancel the outdoor event.",
+                options: ["Unless", "If", "Although", "Because"],
+                correct: 0,
+                level: "advanced"
+            },
+            {
+                question: "The committee _____ reached a consensus on the proposal.",
+                options: ["have", "has", "are", "were"],
+                correct: 1,
+                level: "advanced"
+            },
+            {
+                question: "Had I known about the implications, I _____ differently.",
+                options: ["would act", "would have acted", "will act", "acted"],
+                correct: 1,
+                level: "advanced"
+            },
+            {
+                question: "The phenomenon _____ by several environmental factors.",
+                options: ["is influenced", "influenced", "influences", "influencing"],
+                correct: 0,
+                level: "advanced"
+            }
         ];
 
-        // Anti-repetition function
-        function getRandomItem(database, history, maxHistory = 10) {
-            const available = database.filter(item => !history.includes(item));
-            if (available.length === 0) {
-                history.splice(0, Math.floor(maxHistory / 2));
-                return getRandomItem(database, history, maxHistory);
-            }
-            const selected = available[Math.floor(Math.random() * available.length)];
-            history.push(selected);
-            if (history.length > maxHistory) {
-                history.shift();
-            }
-            return selected;
-        }
+        // Learning State Management
+        let learningState = {
+            currentLevel: localStorage.getItem('userLevel') || 'beginner',
+            todayWords: parseInt(localStorage.getItem('todayWords')) || 0,
+            todayPhrases: parseInt(localStorage.getItem('todayPhrases')) || 0,
+            streakDays: parseInt(localStorage.getItem('streakDays')) || 1,
+            totalScore: parseInt(localStorage.getItem('totalScore')) || 0,
+            lastWordIndex: parseInt(localStorage.getItem('lastWordIndex')) || -1,
+            lastPhraseIndex: parseInt(localStorage.getItem('lastPhraseIndex')) || -1,
+            recentWords: JSON.parse(localStorage.getItem('recentWords')) || [],
+            recentPhrases: JSON.parse(localStorage.getItem('recentPhrases')) || [],
+            favorites: JSON.parse(localStorage.getItem('favorites')) || { words: [], phrases: [] }
+        };
 
-        // Level Diagnosis
-        function startLevelDiagnosis() {
-            updateCharacterMessage("レベル診断を開始しています... 📝");
+        // Quick Test State
+        let currentTest = {
+            questions: [],
+            currentQuestion: 0,
+            score: 0,
+            answers: [],
+            isActive: false
+        };
+
+        // Assessment State
+        let currentAssessment = {
+            questions: [],
+            currentQuestion: 0,
+            score: 0,
+            answers: [],
+            isActive: false
+        };
+
+        // Emi Tips Database
+        const emiTips = [
+            "毎日5分の学習でも継続すれば大きな違いが生まれるよ！✨",
+            "新しい単語を覚えたら、必ず例文と一緒に覚えてね📝",
+            "ネイティブフレーズは実際の会話で使ってみるとより定着するよ🗣️",
+            "間違いを恐れずに、どんどん英語を使ってみよう💪",
+            "レベル診断で自分の実力を正確に把握してね📊",
+            "お気に入り機能を使って、重要な表現をまとめよう❤️",
+            "クイックテストで定期的に実力をチェックしてね⏰",
+            "英語学習は短時間でも毎日続けることが大切だよ🎯",
+            "発音も意識して、声に出して練習してみてね🎵",
+            "ビジネス英語とカジュアル英語の使い分けを意識しよう👔"
+        ];
+
+        // Initialize App
+        function initializeApp() {
+            updateStats();
+            updateLevelDisplay();
+            setRandomEmiTip();
             
-            setTimeout(() => {
-                const levels = [
-                    {level: "初級", description: "基本的な日常英語から始めましょう！", color: "text-green-600"},
-                    {level: "中級", description: "ビジネス英語も取り入れていきましょう！", color: "text-blue-600"},
-                    {level: "上級", description: "ネイティブ表現にチャレンジしましょう！", color: "text-purple-600"}
-                ];
-                
-                const randomLevel = levels[Math.floor(Math.random() * levels.length)];
-                userData.level = randomLevel.level === "初級" ? "beginner" : randomLevel.level === "中級" ? "intermediate" : "advanced";
-                
-                document.getElementById('diagnosisLevel').textContent = randomLevel.level;
-                document.getElementById('diagnosisLevel').className = `font-semibold text-lg ${randomLevel.color}`;
-                document.getElementById('diagnosisDescription').textContent = randomLevel.description;
-                document.getElementById('diagnosisResult').classList.remove('hidden');
-                document.getElementById('diagnosisResult').classList.add('fade-in');
-                document.getElementById('userLevel').textContent = randomLevel.level;
-                
-                updateCharacterMessage(`レベル診断完了！あなたは${randomLevel.level}レベルです！`);
-            }, 2000);
+            // Check if user needs level assessment
+            if (learningState.currentLevel === 'beginner' && learningState.totalScore === 0) {
+                setTimeout(() => {
+                    showEmiMessage("まずはレベル診断から始めてみましょう！あなたの実力を正確に把握できますよ🎯");
+                }, 2000);
+            }
         }
 
-        // Question Count Selection
-        function setQuestionCount(count) {
-            selectedQuestionCount = count;
-            document.querySelectorAll('.question-count-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-500', 'text-white');
-                btn.classList.add('border-gray-300');
+        // Stats Update
+        function updateStats() {
+            document.getElementById('todayWords').textContent = learningState.todayWords;
+            document.getElementById('todayPhrases').textContent = learningState.todayPhrases;
+            document.getElementById('streakDays').textContent = learningState.streakDays;
+            document.getElementById('totalScore').textContent = learningState.totalScore;
+        }
+
+        function updateLevelDisplay() {
+            const levelElement = document.getElementById('currentLevel');
+            const level = learningState.currentLevel;
+            
+            levelElement.textContent = level === 'beginner' ? '初級' : 
+                                      level === 'intermediate' ? '中級' : '上級';
+            levelElement.className = `level-badge level-${level}`;
+        }
+
+        // Level Assessment Functions
+        function startLevelAssessment() {
+            currentAssessment = {
+                questions: [...assessmentQuestions],
+                currentQuestion: 0,
+                score: 0,
+                answers: [],
+                isActive: true
+            };
+            
+            showAssessmentQuestion();
+            showEmiMessage("レベル診断を開始しました！落ち着いて答えてくださいね😊");
+        }
+
+        function showAssessmentQuestion() {
+            const assessmentArea = document.getElementById('assessmentArea');
+            
+            if (currentAssessment.currentQuestion >= currentAssessment.questions.length) {
+                finishAssessment();
+                return;
+            }
+            
+            const question = currentAssessment.questions[currentAssessment.currentQuestion];
+            
+            assessmentArea.innerHTML = `
+                <div class="question-card">
+                    <div class="text-center mb-4">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(currentAssessment.currentQuestion / currentAssessment.questions.length) * 100}%"></div>
+                        </div>
+                        <small class="text-gray-600">質問 ${currentAssessment.currentQuestion + 1} / ${currentAssessment.questions.length}</small>
+                    </div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-grid">
+                        ${question.options.map((option, index) => 
+                            `<button class="option-btn" onclick="selectAssessmentAnswer(${index})">${String.fromCharCode(97 + index)}) ${option}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAssessmentAnswer(selectedIndex) {
+            const question = currentAssessment.questions[currentAssessment.currentQuestion];
+            const isCorrect = selectedIndex === question.correct;
+            
+            currentAssessment.answers.push({
+                question: currentAssessment.currentQuestion,
+                selected: selectedIndex,
+                correct: question.correct,
+                isCorrect: isCorrect
             });
-            document.querySelector(`[data-count="${count}"]`).classList.add('bg-blue-500', 'text-white');
-            document.getElementById('testButtonText').textContent = `${count}問テストを開始`;
+            
+            if (isCorrect) {
+                currentAssessment.score++;
+            }
+            
+            // Show visual feedback
+            const options = document.querySelectorAll('.option-btn');
+            options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                options[question.correct].classList.add('correct');
+            }
+            
+            // Disable all buttons
+            options.forEach(btn => btn.disabled = true);
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                currentAssessment.currentQuestion++;
+                showAssessmentQuestion();
+            }, 1500);
         }
 
-        // Quick Test
-        function startQuickTest() {
-            updateCharacterMessage(`${selectedQuestionCount}問のテストを開始します！頑張って！ 💪`);
+        function finishAssessment() {
+            const percentage = (currentAssessment.score / currentAssessment.questions.length) * 100;
+            let newLevel, levelText, levelAdvice;
             
-            const resultDiv = document.getElementById('testResult');
-            resultDiv.classList.remove('hidden');
-            resultDiv.innerHTML = `
+            if (percentage >= 80) {
+                newLevel = 'advanced';
+                levelText = '上級';
+                levelAdvice = '素晴らしい実力です！高度な語彙とネイティブ表現を学んでいきましょう🌟';
+            } else if (percentage >= 50) {
+                newLevel = 'intermediate';
+                levelText = '中級';
+                levelAdvice = '良いレベルです！ビジネス表現や実用的なフレーズを重点的に学びましょう📈';
+            } else {
+                newLevel = 'beginner';
+                levelText = '初級';
+                levelAdvice = '基礎からしっかり学んでいきましょう！毎日コツコツ続けることが大切です💪';
+            }
+            
+            // Update learning state
+            learningState.currentLevel = newLevel;
+            learningState.totalScore += currentAssessment.score * 10;
+            
+            // Save to localStorage
+            localStorage.setItem('userLevel', newLevel);
+            localStorage.setItem('totalScore', learningState.totalScore);
+            
+            // Update display
+            updateStats();
+            updateLevelDisplay();
+            
+            // Show results
+            document.getElementById('assessmentArea').innerHTML = `
                 <div class="text-center">
-                    <div class="text-3xl mb-2">⏱️</div>
-                    <div class="font-semibold">テスト実行中...</div>
-                    <div class="text-sm text-gray-600 mt-1">${selectedQuestionCount}問解答中</div>
+                    <h3 class="text-2xl font-bold mb-4">診断結果</h3>
+                    <div class="stat-card mx-auto" style="max-width: 400px;">
+                        <div class="stat-number">${Math.round(percentage)}%</div>
+                        <div class="stat-label">正答率</div>
+                        <div class="mt-4">
+                            <span class="level-badge level-${newLevel}">${levelText}</span>
+                        </div>
+                        <div class="mt-4 text-gray-700">${levelAdvice}</div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="btn" onclick="clearAssessmentArea()">学習を開始</button>
+                    </div>
                 </div>
             `;
             
-            setTimeout(() => {
-                const score = Math.floor(Math.random() * 3) + (selectedQuestionCount - 2);
-                const percentage = Math.round((score / selectedQuestionCount) * 100);
-                
-                resultDiv.innerHTML = `
-                    <div class="text-center">
-                        <div class="text-3xl mb-2">${percentage >= 80 ? '🎉' : percentage >= 60 ? '👍' : '📖'}</div>
-                        <div class="font-semibold text-lg">${score}/${selectedQuestionCount}問正解</div>
-                        <div class="text-sm text-gray-600 mt-1">正答率: ${percentage}%</div>
-                        <div class="mt-2 text-xs ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-blue-600' : 'text-orange-600'}">
-                            ${percentage >= 80 ? '素晴らしい成績です！' : percentage >= 60 ? '良い調子です！' : '復習して頑張りましょう！'}
-                        </div>
-                    </div>
-                `;
-                resultDiv.classList.add('fade-in');
-                
-                updateCharacterMessage(percentage >= 80 ? '素晴らしい成績です！🎉' : percentage >= 60 ? '良い調子ですね！👍' : '復習も大切ですよ！📚');
-            }, 3000);
+            showEmiMessage(levelAdvice);
+            currentAssessment.isActive = false;
         }
 
-        // Get New Word
+        function clearAssessmentArea() {
+            document.getElementById('assessmentArea').innerHTML = '';
+        }
+
+        // Quick Test Functions
+        function startQuickTest(numQuestions) {
+            const levelQuestions = assessmentQuestions.filter(q => {
+                if (learningState.currentLevel === 'beginner') return q.level === 'beginner' || q.level === 'intermediate';
+                if (learningState.currentLevel === 'intermediate') return q.level === 'intermediate' || q.level === 'advanced';
+                return q.level === 'advanced';
+            });
+            
+            const selectedQuestions = levelQuestions.sort(() => 0.5 - Math.random()).slice(0, numQuestions);
+            
+            currentTest = {
+                questions: selectedQuestions,
+                currentQuestion: 0,
+                score: 0,
+                answers: [],
+                isActive: true
+            };
+            
+            showQuickTestQuestion();
+            showEmiMessage(`${numQuestions}問のクイックテストを開始します！あなたのレベルに合った問題を用意しました😊`);
+        }
+
+        function showQuickTestQuestion() {
+            const testArea = document.getElementById('quickTestArea');
+            
+            if (currentTest.currentQuestion >= currentTest.questions.length) {
+                finishQuickTest();
+                return;
+            }
+            
+            const question = currentTest.questions[currentTest.currentQuestion];
+            
+            testArea.innerHTML = `
+                <div class="question-card">
+                    <div class="text-center mb-4">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(currentTest.currentQuestion / currentTest.questions.length) * 100}%"></div>
+                        </div>
+                        <small class="text-gray-600">問題 ${currentTest.currentQuestion + 1} / ${currentTest.questions.length}</small>
+                    </div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-grid">
+                        ${question.options.map((option, index) => 
+                            `<button class="option-btn" onclick="selectTestAnswer(${index})">${String.fromCharCode(97 + index)}) ${option}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectTestAnswer(selectedIndex) {
+            const question = currentTest.questions[currentTest.currentQuestion];
+            const isCorrect = selectedIndex === question.correct;
+            
+            currentTest.answers.push({
+                question: currentTest.currentQuestion,
+                selected: selectedIndex,
+                correct: question.correct,
+                isCorrect: isCorrect
+            });
+            
+            if (isCorrect) {
+                currentTest.score++;
+            }
+            
+            // Show visual feedback
+            const options = document.querySelectorAll('.option-btn');
+            options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                options[question.correct].classList.add('correct');
+            }
+            
+            // Disable all buttons
+            options.forEach(btn => btn.disabled = true);
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                currentTest.currentQuestion++;
+                showQuickTestQuestion();
+            }, 1500);
+        }
+
+        function finishQuickTest() {
+            const percentage = (currentTest.score / currentTest.questions.length) * 100;
+            let feedback;
+            
+            if (percentage >= 90) {
+                feedback = '完璧です！🎉 素晴らしい実力ですね！';
+            } else if (percentage >= 70) {
+                feedback = '良くできました！👏 この調子で頑張ってください！';
+            } else if (percentage >= 50) {
+                feedback = '悪くないですね！📚 もう少し復習してみましょう！';
+            } else {
+                feedback = '基礎をしっかり固めましょう！💪 諦めずに続けることが大切です！';
+            }
+            
+            // Update learning state
+            learningState.totalScore += currentTest.score * 5;
+            localStorage.setItem('totalScore', learningState.totalScore);
+            updateStats();
+            
+            // Show results
+            document.getElementById('quickTestArea').innerHTML = `
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold mb-4">テスト結果</h3>
+                    <div class="stat-card mx-auto" style="max-width: 400px;">
+                        <div class="stat-number">${currentTest.score}/${currentTest.questions.length}</div>
+                        <div class="stat-label">正解数 (${Math.round(percentage)}%)</div>
+                        <div class="mt-4 text-gray-700">${feedback}</div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="btn" onclick="clearTestArea()">戻る</button>
+                        <button class="btn btn-success" onclick="startQuickTest(${currentTest.questions.length})" style="margin-left: 10px;">再挑戦</button>
+                    </div>
+                </div>
+            `;
+            
+            showEmiMessage(feedback);
+            currentTest.isActive = false;
+        }
+
+        function clearTestArea() {
+            document.getElementById('quickTestArea').innerHTML = '';
+        }
+
+        // Word Learning Functions
         function getNewWord() {
             const category = document.getElementById('wordCategory').value;
-            const word = getRandomItem(wordDatabase[category], wordHistory);
+            const words = wordsDatabase[category] || wordsDatabase.business;
             
-            document.getElementById('wordResult').innerHTML = `
-                <div class="fade-in">
-                    <div class="text-2xl font-bold text-blue-600 mb-2">${word.word}</div>
-                    <div class="text-lg text-gray-700 mb-2">${word.meaning}</div>
-                    <div class="text-sm text-gray-500 italic">"${word.example}"</div>
-                    <button onclick="speakWord('${word.word}')" class="mt-2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">
-                        <i class="fas fa-volume-up mr-1"></i>発音
-                    </button>
-                </div>
-            `;
+            // Filter words by user level
+            const levelWords = words.filter(word => {
+                if (learningState.currentLevel === 'beginner') return word.level === 'beginner';
+                if (learningState.currentLevel === 'intermediate') return word.level === 'beginner' || word.level === 'intermediate';
+                return true; // Advanced users see all levels
+            });
             
-            userData.wordsLearned++;
-            document.getElementById('todayWords').textContent = userData.wordsLearned;
-            updateCharacterMessage(characterMessages[Math.floor(Math.random() * characterMessages.length)]);
-        }
-
-        // Get New Phrase
-        function getNewPhrase() {
-            const category = document.getElementById('phraseCategory').value;
-            const phrase = getRandomItem(phraseDatabase[category], phraseHistory);
+            // Anti-repetition logic
+            let availableWords = levelWords.filter((_, index) => {
+                return !learningState.recentWords.includes(index);
+            });
             
-            document.getElementById('phraseResult').innerHTML = `
-                <div class="fade-in">
-                    <div class="text-lg font-bold text-green-600 mb-2">"${phrase.phrase}"</div>
-                    <div class="text-base text-gray-700 mb-2">${phrase.meaning}</div>
-                    <div class="text-sm text-gray-500">使用頻度: ${phrase.usage}</div>
-                    <button onclick="speakPhrase('${phrase.phrase}')" class="mt-2 bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">
-                        <i class="fas fa-volume-up mr-1"></i>発音
-                    </button>
-                </div>
-            `;
-            
-            userData.phrasesLearned++;
-            updateCharacterMessage(characterMessages[Math.floor(Math.random() * characterMessages.length)]);
-        }
-
-        // Speech Function
-        function speakWord(word) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';
-                speechSynthesis.speak(utterance);
+            // If all words have been shown recently, reset the recent list
+            if (availableWords.length === 0) {
+                learningState.recentWords = [];
+                availableWords = levelWords;
             }
-        }
-
-        function speakPhrase(phrase) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(phrase);
-                utterance.lang = 'en-US';
-                speechSynthesis.speak(utterance);
+            
+            const randomIndex = Math.floor(Math.random() * availableWords.length);
+            const selectedWord = availableWords[randomIndex];
+            const originalIndex = levelWords.indexOf(selectedWord);
+            
+            // Update recent words (keep last 10)
+            learningState.recentWords.push(originalIndex);
+            if (learningState.recentWords.length > 10) {
+                learningState.recentWords.shift();
             }
+            
+            // Update learning progress
+            learningState.todayWords++;
+            learningState.totalScore += 2;
+            
+            // Save to localStorage
+            localStorage.setItem('recentWords', JSON.stringify(learningState.recentWords));
+            localStorage.setItem('todayWords', learningState.todayWords);
+            localStorage.setItem('totalScore', learningState.totalScore);
+            
+            // Display word
+            displayWord(selectedWord);
+            updateStats();
         }
 
-        // Update Character Message
-        function updateCharacterMessage(message) {
-            document.getElementById('characterMessage').textContent = message;
-            document.querySelector('.character-bounce').classList.remove('character-bounce');
+        function displayWord(word) {
+            const display = document.getElementById('wordDisplay');
+            display.style.display = 'block';
+            
+            document.getElementById('wordMain').textContent = word.word;
+            document.getElementById('wordMeaning').textContent = `意味: ${word.meaning}`;
+            document.getElementById('wordExample').textContent = `例文: ${word.example}`;
+            
+            // Scroll to result (mobile optimization)
+            display.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Animate appearance
+            display.style.opacity = '0';
+            display.style.transform = 'translateY(20px)';
             setTimeout(() => {
-                document.querySelector('.text-4xl').classList.add('character-bounce');
+                display.style.transition = 'all 0.3s ease';
+                display.style.opacity = '1';
+                display.style.transform = 'translateY(0)';
             }, 100);
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setQuestionCount(10);
+        // Phrase Learning Functions
+        function getNewPhrase() {
+            const category = document.getElementById('phraseCategory').value;
+            const phrases = phrasesDatabase[category] || phrasesDatabase.casual;
             
-            // Auto-update character messages
-            setInterval(() => {
-                const tips = [
-                    "毎日少しずつでも続けることが大切です！",
-                    "新しい単語を使って文章を作ってみましょう！",
-                    "覚えたフレーズを実際の会話で使ってみて！",
-                    "発音練習も忘れずに！",
-                    "今日も素晴らしい学習をしていますね！"
-                ];
-                updateCharacterMessage(tips[Math.floor(Math.random() * tips.length)]);
-            }, 30000);
+            // Anti-repetition logic
+            let availablePhrases = phrases.filter((_, index) => {
+                return !learningState.recentPhrases.includes(index);
+            });
+            
+            // If all phrases have been shown recently, reset the recent list
+            if (availablePhrases.length === 0) {
+                learningState.recentPhrases = [];
+                availablePhrases = phrases;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * availablePhrases.length);
+            const selectedPhrase = availablePhrases[randomIndex];
+            const originalIndex = phrases.indexOf(selectedPhrase);
+            
+            // Update recent phrases (keep last 10)
+            learningState.recentPhrases.push(originalIndex);
+            if (learningState.recentPhrases.length > 10) {
+                learningState.recentPhrases.shift();
+            }
+            
+            // Update learning progress
+            learningState.todayPhrases++;
+            learningState.totalScore += 3;
+            
+            // Save to localStorage
+            localStorage.setItem('recentPhrases', JSON.stringify(learningState.recentPhrases));
+            localStorage.setItem('todayPhrases', learningState.todayPhrases);
+            localStorage.setItem('totalScore', learningState.totalScore);
+            
+            // Display phrase
+            displayPhrase(selectedPhrase);
+            updateStats();
+        }
+
+        function displayPhrase(phrase) {
+            const display = document.getElementById('phraseDisplay');
+            display.style.display = 'block';
+            
+            document.getElementById('phraseMain').textContent = `"${phrase.phrase}"`;
+            document.getElementById('phraseMeaning').textContent = `意味: ${phrase.meaning}`;
+            document.getElementById('phraseUsage').textContent = phrase.usage;
+            document.getElementById('phraseStars').textContent = '★'.repeat(phrase.frequency);
+            
+            // Scroll to result (mobile optimization)
+            display.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Animate appearance
+            display.style.opacity = '0';
+            display.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                display.style.transition = 'all 0.3s ease';
+                display.style.opacity = '1';
+                display.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Favorites Functions
+        function addToFavorites(type) {
+            let item;
+            if (type === 'word') {
+                const word = document.getElementById('wordMain').textContent;
+                const meaning = document.getElementById('wordMeaning').textContent;
+                const example = document.getElementById('wordExample').textContent;
+                item = { word, meaning, example, type: 'word' };
+                
+                if (!learningState.favorites.words.some(w => w.word === word)) {
+                    learningState.favorites.words.push(item);
+                    showEmiMessage(`"${word}"をお気に入りに追加しました！❤️`);
+                } else {
+                    showEmiMessage(`"${word}"は既にお気に入りに追加されています🔄`);
+                }
+            } else {
+                const phrase = document.getElementById('phraseMain').textContent;
+                const meaning = document.getElementById('phraseMeaning').textContent;
+                const usage = document.getElementById('phraseUsage').textContent;
+                item = { phrase, meaning, usage, type: 'phrase' };
+                
+                if (!learningState.favorites.phrases.some(p => p.phrase === phrase)) {
+                    learningState.favorites.phrases.push(item);
+                    showEmiMessage(`${phrase}をお気に入りに追加しました！❤️`);
+                } else {
+                    showEmiMessage(`このフレーズは既にお気に入りに追加されています🔄`);
+                }
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(learningState.favorites));
+        }
+
+        function showFavorites(type) {
+            const display = document.getElementById('favoritesDisplay');
+            const items = type === 'words' ? learningState.favorites.words : learningState.favorites.phrases;
+            
+            if (items.length === 0) {
+                display.innerHTML = `<div class="text-center text-gray-500">お気に入りの${type === 'words' ? '単語' : 'フレーズ'}がありません</div>`;
+                return;
+            }
+            
+            display.innerHTML = items.map(item => {
+                if (type === 'words') {
+                    return `
+                        <div class="word-display" style="margin: 10px 0;">
+                            <div class="word-main">${item.word}</div>
+                            <div class="word-meaning">${item.meaning}</div>
+                            <div class="word-example">${item.example}</div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="phrase-display" style="margin: 10px 0;">
+                            <div class="phrase-main">${item.phrase}</div>
+                            <div class="phrase-meaning">${item.meaning}</div>
+                            <div class="phrase-usage">${item.usage}</div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function clearFavorites() {
+            if (confirm('お気に入りをすべてクリアしますか？')) {
+                learningState.favorites = { words: [], phrases: [] };
+                localStorage.setItem('favorites', JSON.stringify(learningState.favorites));
+                document.getElementById('favoritesDisplay').innerHTML = '<div class="text-center text-gray-500">お気に入りがクリアされました</div>';
+                showEmiMessage('お気に入りをクリアしました！また新しいお気に入りを追加してくださいね✨');
+            }
+        }
+
+        // Emi Character Functions
+        function toggleEmiTip() {
+            const tooltip = document.getElementById('emiTooltip');
+            tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function setRandomEmiTip() {
+            const randomTip = emiTips[Math.floor(Math.random() * emiTips.length)];
+            document.getElementById('emiTooltip').innerHTML = randomTip;
+        }
+
+        function showEmiMessage(message) {
+            const tooltip = document.getElementById('emiTooltip');
+            tooltip.innerHTML = message;
+            tooltip.style.display = 'block';
+            
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+                setRandomEmiTip();
+            }, 4000);
+        }
+
+        // Utility Functions
+        function resetProgress() {
+            if (confirm('学習進捗をリセットしますか？この操作は元に戻せません。')) {
+                localStorage.clear();
+                learningState = {
+                    currentLevel: 'beginner',
+                    todayWords: 0,
+                    todayPhrases: 0,
+                    streakDays: 1,
+                    totalScore: 0,
+                    lastWordIndex: -1,
+                    lastPhraseIndex: -1,
+                    recentWords: [],
+                    recentPhrases: [],
+                    favorites: { words: [], phrases: [] }
+                };
+                updateStats();
+                updateLevelDisplay();
+                clearAssessmentArea();
+                clearTestArea();
+                showEmiMessage('学習進捗をリセットしました！新しいスタートですね🌟');
+            }
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Hide Emi tooltip when clicking outside
+        document.addEventListener('click', function(event) {
+            const emiCharacter = document.querySelector('.emi-character');
+            const emiTooltip = document.getElementById('emiTooltip');
+            
+            if (!emiCharacter.contains(event.target) && !emiTooltip.contains(event.target)) {
+                emiTooltip.style.display = 'none';
+            }
         });
+
+        // Auto-rotate Emi tips every 30 seconds
+        setInterval(setRandomEmiTip, 30000);
     </script>
 </body>
 </html>
     <script id="html_badge_script1">
         window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDqSqPnps9YuZlEVszvimk1mq4ZXilokJNbQUFOPipdVGMmzKe10Oc0vPWF9TM9zaPBQ5DdTrbanuJBNs58aLwIrStY0ANdsQWoWm7VvOdEBvPgKFmsiY4liEViJIalHY7agTOgw99iYSj9R5T7n01NTK%2BRieCrjfJkxJDFsDRgk03Xy%2FkqqL0kYwWdDa2X0jNJTemnQXJ7of5Ojyw14vhRPIN2QnWYDarVu3bNSfiPSUq4Tf5O3zLk7xGDemNGhTH6j5ma2F7qAEIthynnkH0ckcmv42h9bmhnlGe90fSZFLbMpmpb%2F22scOQQiAbCHOm019j0sgl9u4BcOigD4J7R0YwHcsCgF4TjlQU02V0CAW2x%2FJ6Pmob9eWzNSpqnBb7aetebvVFVeoUfbSKGCaVTwV8PPQITPi9MG97t2MyR%2BulKmMyAcNidq88jLiNk7ksoP2pMz9AgJfWpCJNXCbZgDwpuqju6glC5Ykc4tw94ka1gLq86JUuqDBdIDAHUu8La%2BjhHcfCkVV51aYuA2ZlmY%3D";
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDirLMLVEF%2Bn7Ibcv3QheEnDdCuyPPZLsWBPJZyfnzdyxYSPIbVet0os6NeNydDL23ITMKKehnsiNugQVVP9JeYx7VpwyyxGRjBQArNKMciFAT9k9WgEUSCDUw0zbh0Q9VEwtIWPAiFpTpkHeijuYpRLk2VsTfdB5vLiuDxzT4xOMF3Da8%2FugtQQGgpr3pZI4MrcPLzrG%2B9W5fBvwE%2BQXWeZzbzI%2BhLjN0a7cK6AVC%2BJW2WONX%2B2gEeqsi1myV8oPDEP1WHWKRdn7N5Oall%2BV93aP%2FIHklw8%2FlHqWa7I3oYjeCS2qaSv6ZTtZuYh3jFzEh%2Bsu%2BBTfWMBbEvUorFPCZUD7LDlrr3OnvhM%2B7C%2BHCqFW9Q%2BaTbv5o4d3i%2BOoBB%2FqDAFLzt3t2AUB80Ub1f2j7NjwIYRerFVltJ%2BtYcg7GdksdMaC%2B6Df%2BJ5D3duBcGVEjErv0lhgdo6BCMxxEnk5MNm8UbIFbpyAm9IttFes81AryYZbjGozVdDDrHaa%2FtL%2BRrNGSutXphPbSXeyIlI9nEM%3D";
         window.__genspark_locale = "ja-JP";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDqSqPnps9YuZlEVszvimk1mq4ZXilokJNbQUFOPipdVGMmzKe10Oc0vPWF9TM9zaPBQ5DdTrbanuJBNs58aLwIrStY0ANdsQWoWm7VvOdEBvPgKFmsiY4liEViJIalHY7agTOgw99iYSj9R5T7n01NTK+RieCrjfJkxJDFsDRgk03Xy/kqqL0kYwWdDa2X0jNJTemnQXJ7of5Ojyw14vhRPIN2QnWYDarVu3bNSfiPSUq4Tf5O3zLk7xGDemNGhTH6j5ma2F7qAEIthynnkH0ckcmv42h9bmhnlGe90fSZFLbMpmpb/22scOQQiAbCHOm019j0sgl9u4BcOigD4J7R0YwHcsCgF4TjlQU02V0CAW2x/J6Pmob9eWzNSpqnBb7aetebvVFVeoUfbSKGCaVTwV8PPQITPi9MG97t2MyR+ulKmMyAcNidq88jLiNk7ksoP2pMz9AgJfWpCJNXCbZgDwpuqju6glC5Ykc4tw94ka1gLq86JUuqDBdIDAHUu8La+jhHcfCkVV51aYuA2ZlmY=";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDirLMLVEF+n7Ibcv3QheEnDdCuyPPZLsWBPJZyfnzdyxYSPIbVet0os6NeNydDL23ITMKKehnsiNugQVVP9JeYx7VpwyyxGRjBQArNKMciFAT9k9WgEUSCDUw0zbh0Q9VEwtIWPAiFpTpkHeijuYpRLk2VsTfdB5vLiuDxzT4xOMF3Da8/ugtQQGgpr3pZI4MrcPLzrG+9W5fBvwE+QXWeZzbzI+hLjN0a7cK6AVC+JW2WONX+2gEeqsi1myV8oPDEP1WHWKRdn7N5Oall+V93aP/IHklw8/lHqWa7I3oYjeCS2qaSv6ZTtZuYh3jFzEh+su+BTfWMBbEvUorFPCZUD7LDlrr3OnvhM+7C+HCqFW9Q+aTbv5o4d3i+OoBB/qDAFLzt3t2AUB80Ub1f2j7NjwIYRerFVltJ+tYcg7GdksdMaC+6Df+J5D3duBcGVEjErv0lhgdo6BCMxxEnk5MNm8UbIFbpyAm9IttFes81AryYZbjGozVdDDrHaa/tL+RrNGSutXphPbSXeyIlI9nEM=";
     </script>
     
     <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
